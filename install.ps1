@@ -3,7 +3,7 @@ param(
     [ValidateSet("User", "Machine")]
     [string]$Scope = $(if ($env:RON1N_INSTALL_SCOPE) { $env:RON1N_INSTALL_SCOPE } else { "User" }),
     [string]$Version = $(if ($env:RON1N_VERSION) { $env:RON1N_VERSION } else { "0.0.1zoro" }),
-    [string]$ReleaseTag = $(if ($env:RON1N_RELEASE_TAG) { $env:RON1N_RELEASE_TAG } else { "0.0.1zoro-r1" }),
+    [string]$ReleaseTag = $(if ($env:RON1N_RELEASE_TAG) { $env:RON1N_RELEASE_TAG } else { "0.0.1zoro-r2" }),
     [string]$Repository = $(if ($env:RON1N_REPOSITORY) { $env:RON1N_REPOSITORY } else { "0xb0rn3/ron1n" })
 )
 

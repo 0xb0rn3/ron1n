@@ -30,6 +30,7 @@ func InstallService(_ Paths, executable, configFile string) (string, error) {
 		return "", fmt.Errorf("create Windows scheduled task (run from an elevated PowerShell): %w: %s", err, strings.TrimSpace(string(output)))
 	}
 	if output, err := exec.Command("schtasks.exe", "/Run", "/TN", serviceName).CombinedOutput(); err != nil {
+		_ = exec.Command("schtasks.exe", "/Delete", "/TN", serviceName, "/F").Run()
 		return serviceName, fmt.Errorf("start Windows scheduled task: %w: %s", err, strings.TrimSpace(string(output)))
 	}
 	return serviceName, nil
@@ -52,6 +53,9 @@ func ServiceStatus() string {
 }
 
 func RemoveService(_ Paths) error {
+	// Deleting a task does not stop an instance that is already running. End it
+	// first so uninstall removes both the autostart definition and the live host.
+	_ = exec.Command("schtasks.exe", "/End", "/TN", serviceName).Run()
 	output, err := exec.Command("schtasks.exe", "/Delete", "/TN", serviceName, "/F").CombinedOutput()
 	if err != nil && !strings.Contains(strings.ToLower(string(output)), "cannot find") {
 		return fmt.Errorf("remove Windows scheduled task: %w: %s", err, strings.TrimSpace(string(output)))
