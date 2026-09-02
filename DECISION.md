@@ -64,7 +64,7 @@ Local LAN hosting remains available as an offline fallback and does not require 
 
 - Publish the exact `0.0.1zoro` tag from the clean, pushed release commit.
 - Build 12 native binaries from that clean tag and attach them with `SHA256SUMS` to the matching GitHub release.
-- Pin copy-paste bootstrap URLs to the tag, never mutable `main`.
+- Pin copy-paste bootstrap URLs to an immutable tag or reviewed full commit, never mutable `main`. Windows `0.0.1zoro` uses compatibility-fix commit `d4a8d5913768735ea75683876e78c4e62900d6ad` because the original tagged script referenced a .NET property absent from the Windows 10 PowerShell 5.1 guest; release binaries remain tag assets.
 - Never move a published tag or replace its assets; issue a new version instead.
 - Follow `docs/RELEASE.md` and complete the post-publication Linux URL and Windows VM checks before declaring the release validated.
 

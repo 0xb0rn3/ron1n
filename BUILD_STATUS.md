@@ -14,6 +14,7 @@ Target release: `0.0.1zoro`
 - Session creation now prints a management ID and the CLI exposes `ron1n relay revoke --session ID` for authenticated explicit revocation.
 - Release trust is now stated precisely: imported content uses local Ed25519 signatures; application bootstrap uses same-origin GitHub release checksums. Application self-update, independent release signing, and automatic application rollback are future work.
 - Windows 10 QEMU/KVM acceptance is the remaining pre-handoff runtime gate; per owner instruction it begins only after GitHub push/release publication.
+- The GitHub-first Windows gate caught a PowerShell 5.1 architecture-detection incompatibility in the tagged bootstrap before any binary download. The immutable release/tag were preserved; compatibility fix `d4a8d5913768735ea75683876e78c4e62900d6ad` is pushed and awaiting the rerun.
 
 ## Release gates
 

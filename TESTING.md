@@ -54,11 +54,12 @@ Target: libvirt domain `win10`, Windows 10, amd64, SPICE/QXL, NAT address observ
 The guest has no QEMU Guest Agent; testing is driven through its SPICE console with screenshot evidence. Required post-push gates:
 
 ```powershell
-irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/0.0.1zoro/install.ps1' | iex
-irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/0.0.1zoro/scripts/windows-vm-smoke.ps1' | iex
+irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1' | iex
+irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/scripts/windows-vm-smoke.ps1' | iex
 ```
 
-- [ ] Execute the exact tag-pinned README `irm .../install.ps1 | iex` path from GitHub.
+- [x] Execute the original tag-pinned README `irm .../install.ps1 | iex` path from GitHub: failed before download because Windows PowerShell 5.1 lacks `RuntimeInformation.OSArchitecture`.
+- [ ] Execute the exact commit-pinned compatibility installer from the current README; fix commit: `d4a8d5913768735ea75683876e78c4e62900d6ad`.
 - [ ] Confirm release checksum verification and native `ron1n version` output.
 - [ ] Build/sign/verify the real pinned content manifest on NTFS.
 - [ ] Start the native Windows host and validate loopback health, cache MIME, full hash, and range.

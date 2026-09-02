@@ -81,7 +81,7 @@ Confirm the tag-pinned bootstrap scripts and representative release files are re
 ```bash
 for url in \
   'https://raw.githubusercontent.com/0xb0rn3/ron1n/0.0.1zoro/install.sh' \
-  'https://raw.githubusercontent.com/0xb0rn3/ron1n/0.0.1zoro/install.ps1' \
+  'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1' \
   'https://github.com/0xb0rn3/ron1n/releases/download/0.0.1zoro/SHA256SUMS' \
   'https://github.com/0xb0rn3/ron1n/releases/download/0.0.1zoro/ron1n-linux-amd64' \
   'https://github.com/0xb0rn3/ron1n/releases/download/0.0.1zoro/ron1n-relay-windows-amd64.exe'; do
@@ -104,8 +104,10 @@ Both commands must print exactly `0.0.1zoro`. Remove the isolated directory afte
 Finally, run the tag-pinned installer and then the tag-pinned smoke suite in the Windows 10 QEMU/KVM guest:
 
 ```powershell
-irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/0.0.1zoro/install.ps1' | iex
-irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/0.0.1zoro/scripts/windows-vm-smoke.ps1' | iex
+irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1' | iex
+irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/scripts/windows-vm-smoke.ps1' | iex
 ```
 
 Record the checksum verification, version output, PATH behavior, content import, local host, relay delivery, explicit `ron1n relay revoke --session ID` result, and execution-policy result in `TESTING.md` and `BUILD_STATUS.md`.
+
+The first tag-pinned Windows bootstrap exposed a real compatibility defect during this gate: PowerShell 5.1 on the Windows 10 guest did not expose `RuntimeInformation.OSArchitecture`. The tag and release assets were left immutable. Commit `d4a8d5913768735ea75683876e78c4e62900d6ad` adds a legacy-safe `PROCESSOR_ARCHITECTURE`/`PROCESSOR_ARCHITEW6432` fallback, and the Windows commands above pin that exact reviewed commit.

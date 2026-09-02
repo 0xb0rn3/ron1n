@@ -15,7 +15,7 @@ The copy-paste installers download both `ron1n` and `ron1n-relay` from the `0.0.
 Open PowerShell and run:
 
 ```powershell
-irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/0.0.1zoro/install.ps1' | iex
+irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1' | iex
 ```
 
 This installs to `%LOCALAPPDATA%\ron1n\bin` and adds that directory to the current user's PATH. It does not require administrator rights and does not change the machine's PowerShell execution policy.
@@ -25,7 +25,7 @@ This installs to `%LOCALAPPDATA%\ron1n\bin` and adds that directory to the curre
 Run this from a normal PowerShell window. Windows will show its standard UAC prompt:
 
 ```powershell
-Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -Command "$env:RON1N_INSTALL_SCOPE=''Machine''; irm ''https://raw.githubusercontent.com/0xb0rn3/ron1n/0.0.1zoro/install.ps1'' | iex"'
+Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -Command "$env:RON1N_INSTALL_SCOPE=''Machine''; irm ''https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1'' | iex"'
 ```
 
 This uses `-ExecutionPolicy Bypass` only for the new installer process; it does not weaken or overwrite the permanent user or machine policy. Machine scope installs to `%ProgramFiles%\ron1n` and updates the machine PATH.
@@ -62,7 +62,7 @@ Windows:
 
 ```powershell
 $installer = Join-Path $env:TEMP 'ron1n-install.ps1'
-irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/0.0.1zoro/install.ps1' -OutFile $installer
+irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1' -OutFile $installer
 Get-Content $installer
 & $installer
 ```
@@ -75,7 +75,7 @@ less /tmp/ron1n-install.sh
 bash /tmp/ron1n-install.sh
 ```
 
-The installer URL is pinned to the `0.0.1zoro` tag. The scripts, release binaries, and `SHA256SUMS` still share the GitHub repository trust domain: the checksum detects transfer or storage corruption, but it is not an independently signed release attestation. Inspect the tag/commit and compare the published checksums through an independent trusted channel when stronger authentication is required.
+The Linux/macOS installer URL is pinned to the `0.0.1zoro` tag. The Windows installer is pinned to follow-up commit `d4a8d5913768735ea75683876e78c4e62900d6ad`, which replaces a .NET architecture API absent from the Windows 10 PowerShell 5.1 guest; the release binaries and their checksums remain the unchanged `0.0.1zoro` assets. The scripts, release binaries, and `SHA256SUMS` still share the GitHub repository trust domain: the checksum detects transfer or storage corruption, but it is not an independently signed release attestation. Inspect the tag/commit and compare the published checksums through an independent trusted channel when stronger authentication is required.
 
 The local Ed25519 key used for imported content does not sign ron1n application binaries. Release `0.0.1zoro` has no application self-updater, release-signing key, or automatic application rollback. Upgrade the application by reviewing and running the installer for a newer explicit release. Independently signed application releases and rollback-aware self-update remain future work.
 
