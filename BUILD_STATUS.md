@@ -15,6 +15,7 @@ Target release: `0.0.1zoro`
 - Release trust is now stated precisely: imported content uses local Ed25519 signatures; application bootstrap uses same-origin GitHub release checksums. Application self-update, independent release signing, and automatic application rollback are future work.
 - Windows 10 QEMU/KVM acceptance is the remaining pre-handoff runtime gate; per owner instruction it begins only after GitHub push/release publication.
 - The GitHub-first Windows gate caught a PowerShell 5.1 architecture-detection incompatibility in the tagged bootstrap before any binary download. The immutable release/tag were preserved; compatibility fix `d4a8d5913768735ea75683876e78c4e62900d6ad` is pushed and awaiting the rerun.
+- The compatibility rerun installed and checksum-verified both binaries, returned exact version `0.0.1zoro`, and passed content import plus all local host gates. Its test harness stopped after outbound-agent startup on an empty-log `.Trim()` call; harness fix `d9be416c4c6d44e054ae60ac0f29ba688a412e17` is pushed for the relay-session rerun.
 
 ## Release gates
 

@@ -31,4 +31,6 @@ The Ed25519 key in this release signs imported content manifests, not ron1n appl
 
 Post-tag bootstrap note: Windows 10 PowerShell 5.1 testing found that its .NET runtime lacks `RuntimeInformation.OSArchitecture`. Commit `d4a8d5913768735ea75683876e78c4e62900d6ad` adds environment-based amd64/arm64 detection without moving the `0.0.1zoro` tag or replacing release binaries.
 
+Windows acceptance harness note: commit `d9be416c4c6d44e054ae60ac0f29ba688a412e17` safely handles empty redirected process logs discovered after the native content/local-host gates had passed.
+
 PSFree, Lapse, AIO patches, GoldHEN, fonts, and other imported artifacts remain separately attributed upstream components. See `docs/UPSTREAM_AUDIT.md` and `docs/ECOSYSTEM_AUDIT.md`.

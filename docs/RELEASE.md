@@ -105,9 +105,11 @@ Finally, run the tag-pinned installer and then the tag-pinned smoke suite in the
 
 ```powershell
 irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1' | iex
-irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/scripts/windows-vm-smoke.ps1' | iex
+irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d9be416c4c6d44e054ae60ac0f29ba688a412e17/scripts/windows-vm-smoke.ps1' | iex
 ```
 
 Record the checksum verification, version output, PATH behavior, content import, local host, relay delivery, explicit `ron1n relay revoke --session ID` result, and execution-policy result in `TESTING.md` and `BUILD_STATUS.md`.
 
 The first tag-pinned Windows bootstrap exposed a real compatibility defect during this gate: PowerShell 5.1 on the Windows 10 guest did not expose `RuntimeInformation.OSArchitecture`. The tag and release assets were left immutable. Commit `d4a8d5913768735ea75683876e78c4e62900d6ad` adds a legacy-safe `PROCESSOR_ARCHITECTURE`/`PROCESSOR_ARCHITEW6432` fallback, and the Windows commands above pin that exact reviewed commit.
+
+The first full smoke run then exposed a harness-only null-log diagnostics bug after all local checks and outbound-agent startup had passed. Commit `d9be416c4c6d44e054ae60ac0f29ba688a412e17` makes empty redirected logs safe and is the immutable smoke-script reference above.

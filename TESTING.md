@@ -55,11 +55,12 @@ The guest has no QEMU Guest Agent; testing is driven through its SPICE console w
 
 ```powershell
 irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1' | iex
-irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/scripts/windows-vm-smoke.ps1' | iex
+irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d9be416c4c6d44e054ae60ac0f29ba688a412e17/scripts/windows-vm-smoke.ps1' | iex
 ```
 
 - [x] Execute the original tag-pinned README `irm .../install.ps1 | iex` path from GitHub: failed before download because Windows PowerShell 5.1 lacks `RuntimeInformation.OSArchitecture`.
-- [ ] Execute the exact commit-pinned compatibility installer from the current README; fix commit: `d4a8d5913768735ea75683876e78c4e62900d6ad`.
+- [x] Execute the exact commit-pinned compatibility installer from the current README; checksums verified and `ron1n version` returned `0.0.1zoro`. Fix commit: `d4a8d5913768735ea75683876e78c4e62900d6ad`.
+- [x] First full smoke attempt passed version, pinned import, NTFS signing, local health/MIME/hash/range, relay provisioning, and agent startup; its diagnostics helper then called `.Trim()` on an empty log. Harness-only fix: `d9be416c4c6d44e054ae60ac0f29ba688a412e17`.
 - [ ] Confirm release checksum verification and native `ron1n version` output.
 - [ ] Build/sign/verify the real pinned content manifest on NTFS.
 - [ ] Start the native Windows host and validate loopback health, cache MIME, full hash, and range.
