@@ -19,10 +19,33 @@ if ($Scope -eq "Machine" -and -not (Test-Administrator)) {
     throw "Machine scope requires an elevated PowerShell. Use the documented Start-Process -Verb RunAs command."
 }
 
-$architecture = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString().ToLowerInvariant()
+function Get-Ron1nArchitecture {
+    $detectedArchitecture = $null
+    $runtimeType = "System.Runtime.InteropServices.RuntimeInformation" -as [type]
+    if ($null -ne $runtimeType) {
+        $architectureProperty = $runtimeType.GetProperty("OSArchitecture")
+        if ($null -ne $architectureProperty) {
+            $detectedArchitecture = $architectureProperty.GetValue($null, $null).ToString()
+        }
+    }
+    if ([string]::IsNullOrWhiteSpace($detectedArchitecture)) {
+        if (-not [string]::IsNullOrWhiteSpace($env:PROCESSOR_ARCHITEW6432)) {
+            $detectedArchitecture = $env:PROCESSOR_ARCHITEW6432
+        } else {
+            $detectedArchitecture = $env:PROCESSOR_ARCHITECTURE
+        }
+    }
+    if ([string]::IsNullOrWhiteSpace($detectedArchitecture)) {
+        throw "Unable to determine the Windows operating-system architecture."
+    }
+    return $detectedArchitecture.ToLowerInvariant()
+}
+
+$architecture = Get-Ron1nArchitecture
 switch ($architecture) {
-    "x64" { $targetArch = "amd64" }
-    "arm64" { $targetArch = "arm64" }
+    "x64" { $targetArch = "amd64"; break }
+    "amd64" { $targetArch = "amd64"; break }
+    "arm64" { $targetArch = "arm64"; break }
     default { throw "Unsupported Windows architecture: $architecture" }
 }
 
