@@ -21,10 +21,13 @@ func InstallService(_ Paths, executable, configFile string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	command := fmt.Sprintf(`\"%s\" serve --config \"%s\"`, executable, configFile)
-	args := []string{"/Create", "/SC", "ONLOGON", "/TN", serviceName, "/TR", command, "/F"}
+	// exec.Command passes each argument directly to schtasks.exe. Backslash-
+	// escaping the quotes here would therefore store the backslashes in the
+	// task action and make Windows look for a file whose name starts with \".
+	command := fmt.Sprintf(`"%s" serve --config "%s"`, executable, configFile)
+	args := []string{"/Create", "/SC", "ONLOGON", "/TN", serviceName, "/TR", command, "/RL", "LIMITED", "/F"}
 	if output, err := exec.Command("schtasks.exe", args...).CombinedOutput(); err != nil {
-		return "", fmt.Errorf("create Windows scheduled task: %w: %s", err, strings.TrimSpace(string(output)))
+		return "", fmt.Errorf("create Windows scheduled task (run from an elevated PowerShell): %w: %s", err, strings.TrimSpace(string(output)))
 	}
 	if output, err := exec.Command("schtasks.exe", "/Run", "/TN", serviceName).CombinedOutput(); err != nil {
 		return serviceName, fmt.Errorf("start Windows scheduled task: %w: %s", err, strings.TrimSpace(string(output)))
