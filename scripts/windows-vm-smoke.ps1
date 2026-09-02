@@ -99,9 +99,12 @@ function Get-SmokeProcessDiagnostics {
     $parts = @()
     foreach ($name in @($TrackedProcess.Stdout, $TrackedProcess.Stderr)) {
         if (Test-Path -LiteralPath $name -PathType Leaf) {
-            $body = (Get-Content -LiteralPath $name -Raw -ErrorAction SilentlyContinue).Trim()
-            if ($body) {
-                $parts += $body
+            $rawBody = Get-Content -LiteralPath $name -Raw -ErrorAction SilentlyContinue
+            if ($null -ne $rawBody) {
+                $body = $rawBody.Trim()
+                if ($body) {
+                    $parts += $body
+                }
             }
         }
     }
@@ -344,7 +347,9 @@ try {
     $trackedProcesses += $agentProcess
     Start-Sleep -Milliseconds 500
     $agentProcess.Process.Refresh()
-    Assert-Smoke (-not $agentProcess.Process.HasExited) ("Outbound agent exited early.`n" + (Get-SmokeProcessDiagnostics $agentProcess))
+    if ($agentProcess.Process.HasExited) {
+        throw ("Outbound agent exited early.`n" + (Get-SmokeProcessDiagnostics $agentProcess))
+    }
 
     Write-SmokeStep "Creating an expiring capability and fetching GoldHEN through the relay"
     $sessionOutput = Invoke-SmokeNative -FilePath $ron1nPath -Arguments @(
@@ -401,7 +406,7 @@ try {
             $tracked.Process.Refresh()
             if (-not $tracked.Process.HasExited) {
                 Stop-Process -Id $tracked.Process.Id -Force -ErrorAction Stop
-                $tracked.Process.WaitForExit(5000)
+                [void]$tracked.Process.WaitForExit(5000)
             }
             $tracked.Process.Dispose()
         } catch {
