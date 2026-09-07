@@ -1,6 +1,6 @@
 # ron1n coordination and decisions
 
-Last updated: 2026-09-02
+Last updated: 2026-09-07
 
 ## Identity and ownership
 
@@ -22,7 +22,28 @@ Scope:
 - Support native Linux and Windows binaries plus Bash and PowerShell automation.
 - Add tests, build automation, ecosystem audit, operator documentation, and release metadata.
 
-Owned paths: the complete repository until the first `0.0.1zoro` handoff commit.
+Owned paths: the complete repository except `ui/prototype/**`, which is assigned below. lukk4n owns the operator API, Go embedding, authentication/origin controls, integration tests, release plumbing, and the final prototype patch.
+
+## Assigned claim: CHINAM0K-RON1N-UI-001
+
+Status: assigned by 0xb0rn3; awaiting chinam0k acceptance and implementation
+
+Scope:
+
+- Build the dependency-free static operator-dashboard prototype described by `DESIGN.md` and `CLAUDE_UI_HANDOFF.md`.
+- Work only in `ui/prototype/**` and use fixture data with no real network calls.
+- Render and inspect the prototype at mobile and desktop widths, document the checks, commit explicit owned paths, and push as 0xb0rn3.
+
+Chinam0k must not edit Go code, installers, release assets, existing Markdown, imported content, or PS4-facing pages. The prototype is a design handoff; lukk4n will review and patch it onto the loopback-only Go API.
+
+## Operator UI decision
+
+- The UI is an operator control surface embedded in the Go binary, separate from the byte-exact PS4 content tree.
+- The production dashboard and mutation API bind to loopback by default. They are never exposed through relay capability URLs.
+- The UI may invoke only named ron1n operations. It cannot expose a shell, arbitrary URL fetch, filesystem browser, upload-and-execute path, or raw secret store.
+- Capability URLs are treated as secrets, shown only when created, and never written into activity logs.
+- Activity labels retain the existing honest semantics. A completed transfer never claims exploit or payload execution.
+- Product version remains exactly `0.0.1zoro`; distribution revision is displayed separately.
 
 ## Product boundary
 

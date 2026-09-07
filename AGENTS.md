@@ -1,6 +1,6 @@
 # ron1n agent guide
 
-Read `DECISION.md`, `ARCHITECTURE.md`, `BUILD_STATUS.md`, `TESTING.md`, and `git status` before editing.
+Read `DECISION.md`, `ARCHITECTURE.md`, `BUILD_STATUS.md`, `TESTING.md`, and `git status` before editing. UI work must also read `DESIGN.md` and `CLAUDE_UI_HANDOFF.md`.
 
 ## Identities
 
@@ -14,6 +14,7 @@ Read `DECISION.md`, `ARCHITECTURE.md`, `BUILD_STATUS.md`, `TESTING.md`, and `git
 - Preserve every dirty path and commit only explicit owned paths.
 - Git plus the Markdown record is authority; AgentMemory is transport.
 - Save a non-secret AgentMemory handoff after material changes.
+- UI prototype work stays inside the exact path assigned in `DECISION.md`; Go/API integration remains lukk4n-owned until an explicit handoff.
 - Never commit content-signing private keys, relay tokens, session URLs, VM credentials, imported payload bundles, or release working directories.
 
 ## Non-negotiable product rules
