@@ -65,6 +65,12 @@ Only `Range`, `If-None-Match`, and `If-Modified-Since` cross the tunnel. Cookies
 
 Transport credentials authenticate a host to a relay. Separately generated bundle-signing keys authorize imported content. Compromising either does not silently grant the other capability.
 
+## Operator UI boundary
+
+The planned Control Deck is an operator-only UI embedded in the `ron1n` Go binary. Its static assets and named JSON operations are separate from imported PS4 content. The dashboard and mutation API bind to loopback by default and are never exposed below `/s/{capability}/` relay routes.
+
+The UI can request only typed ron1n operations such as status, bundle verification, session creation, and session revocation. It has no general shell, arbitrary URL fetch, filesystem browser, upload, or payload-execution primitive. Capability URLs are one-time sensitive output; persistent activity stores only the non-secret session management ID. `DESIGN.md` and `CLAUDE_UI_HANDOFF.md` define the prototype contract, while lukk4n retains Go API and security integration ownership.
+
 Application releases have a narrower trust model in `0.0.1zoro`: the Bash and PowerShell bootstrap scripts verify each downloaded binary against `SHA256SUMS`, but the scripts, checksums, and binaries are all obtained from the same tagged GitHub repository/release trust domain. The content Ed25519 key does not sign application releases. There is no application self-updater, independently rooted release-signing key, or application rollback engine in this version. Those are future work; `ron1n update` updates imported content only.
 
 ## Deployment

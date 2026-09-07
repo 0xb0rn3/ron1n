@@ -1,6 +1,6 @@
 # ron1n build status
 
-Last updated: 2026-09-02
+Last updated: 2026-09-07
 
 Target release: `0.0.1zoro`
 
@@ -13,23 +13,24 @@ Target release: `0.0.1zoro`
 - Real pinned upstream integration passed for cache MIME, full GoldHEN SHA-256, and byte range. Exact evidence is in `TESTING.md`.
 - Session creation now prints a management ID and the CLI exposes `ron1n relay revoke --session ID` for authenticated explicit revocation.
 - Release trust is now stated precisely: imported content uses local Ed25519 signatures; application bootstrap uses same-origin GitHub release checksums. Application self-update, independent release signing, and automatic application rollback are future work.
-- Windows 10 QEMU/KVM acceptance is the remaining pre-handoff runtime gate; per owner instruction it begins only after GitHub push/release publication.
-- The GitHub-first Windows gate caught a PowerShell 5.1 architecture-detection incompatibility in the tagged bootstrap before any binary download. The immutable release/tag were preserved; compatibility fix `d4a8d5913768735ea75683876e78c4e62900d6ad` is pushed and awaiting the rerun.
-- The compatibility rerun installed and checksum-verified both binaries, returned exact version `0.0.1zoro`, and passed content import plus all local host gates. Its test harness stopped after outbound-agent startup on an empty-log `.Trim()` call; harness fix `d9be416c4c6d44e054ae60ac0f29ba688a412e17` is pushed for the relay-session rerun.
+- The original `0.0.1zoro` release and immutable Windows distribution revisions `0.0.1zoro-r1` and `0.0.1zoro-r2` are published with 13 assets each. Product version remains exactly `0.0.1zoro`.
+- Windows 10 QEMU/KVM acceptance is complete. The exact GitHub `r2` installer checksum-verified both binaries, imported and signed the pinned PSFree bundle on NTFS, served the expected health/bundle identity, restarted, updated pinned content, stopped and removed the Scheduled Task, passed repeat uninstall, and left every permanent execution-policy scope undefined.
+- The full Windows host/relay smoke separately passed exact cache MIME, GoldHEN SHA-256, range behavior, capability delivery, explicit revocation, cleanup, and policy preservation. Evidence and revision history are in `TESTING.md`.
+- The operator-dashboard design contract is pushed in commit `479e62d`. Chinam0k owns only the fixture-backed `ui/prototype/**` handoff; lukk4n retains the loopback Go API and final integration.
 
 ## Release gates
 
 - [x] Go host replaces the Python server without changing upstream bytes.
 - [x] Linux, Windows, and macOS native CLI/relay binaries cross-compile for amd64/arm64.
-- [ ] Bash and PowerShell install/build paths pass syntax/runtime checks (Bash passed; Windows VM pending).
+- [x] Bash and PowerShell install/build paths pass syntax/runtime checks.
 - [x] Local Application Cache and required route tests pass.
 - [x] Remote relay integration works through an outbound-only host agent with no inbound host listener.
 - [x] Expired/revoked/wrong-host sessions and unauthorized agents fail closed.
 - [x] Manifest hash/signature, traversal, symlink, archive, and tampering tests pass.
 - [x] `go test ./...`, race tests, vet, and all 12 release cross-builds pass.
-- [ ] Clean commit is tagged exactly `0.0.1zoro`; 12 binaries plus `SHA256SUMS` are attached to the matching GitHub release and the tagged installer URLs return HTTP 200 per `docs/RELEASE.md`.
+- [x] Clean commit is tagged exactly `0.0.1zoro`; 12 binaries plus `SHA256SUMS` are attached. Immutable Windows revisions `r1` and `r2` preserve the product version and their installer/assets return HTTP 200 per `docs/RELEASE.md`.
 - [ ] Hardware validation on a PS4 9.00 console is documented; transfer and execution are reported separately.
-- [ ] Commit is authored as 0xb0rn3 and pushed to `origin/main`.
+- [x] Implementation, release fixes, and UI handoff are authored as 0xb0rn3 and pushed to `origin/main`.
 
 ## Known legacy defects being removed
 

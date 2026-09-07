@@ -1,6 +1,14 @@
 # `0.0.1zoro` release runbook
 
-This runbook publishes the exact tagged ron1n release consumed by the Bash and PowerShell bootstrap installers. GitHub push and GitHub release publication are separate operations: pushing `main` alone does not make the installer URLs work.
+This runbook records and reproduces the exact tagged ron1n releases consumed by the Bash and PowerShell bootstrap installers. GitHub push and GitHub release publication are separate operations: pushing `main` alone does not make installer asset URLs work.
+
+Current publication state:
+
+- `0.0.1zoro`: original product release; Linux/macOS installer default.
+- `0.0.1zoro-r1`: immutable Windows Scheduled Task quoting correction.
+- `0.0.1zoro-r2`: current Windows distribution revision with stop-before-delete uninstall; built from `acd7acb3f62ce099d1c792b993b8145de8240f0a`.
+
+Every release above has 13 uploaded assets. All binaries report product version `0.0.1zoro`; `r1` and `r2` are distribution revisions, not different product-version strings.
 
 ## Trust boundary
 
@@ -63,14 +71,14 @@ gh release create "$release_version" \
 
 If `sha256sum` is unavailable on the release host, verify with `shasum -a 256 -c SHA256SUMS` from inside the release directory.
 
-Never move the published tag or replace one of its assets. Correct a released artifact by publishing a new version with a new tag and checksum set.
+Never move a published tag or replace one of its assets. Correct a released artifact by publishing a new distribution revision or product version with a new tag and checksum set.
 
 ## Post-publication checks
 
 Confirm that GitHub exposes exactly 13 uploaded assets:
 
 ```bash
-gh release view 0.0.1zoro \
+gh release view 0.0.1zoro-r2 \
   --repo 0xb0rn3/ron1n \
   --json tagName,isDraft,isPrerelease,assets \
   --jq '{tag: .tagName, draft: .isDraft, prerelease: .isPrerelease, assets: (.assets | length)}'
@@ -81,7 +89,9 @@ Confirm the tag-pinned bootstrap scripts and representative release files are re
 ```bash
 for url in \
   'https://raw.githubusercontent.com/0xb0rn3/ron1n/0.0.1zoro/install.sh' \
-  'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1' \
+  'https://raw.githubusercontent.com/0xb0rn3/ron1n/acd7acb3f62ce099d1c792b993b8145de8240f0a/install.ps1' \
+  'https://github.com/0xb0rn3/ron1n/releases/download/0.0.1zoro-r2/SHA256SUMS' \
+  'https://github.com/0xb0rn3/ron1n/releases/download/0.0.1zoro-r2/ron1n-windows-amd64.exe' \
   'https://github.com/0xb0rn3/ron1n/releases/download/0.0.1zoro/SHA256SUMS' \
   'https://github.com/0xb0rn3/ron1n/releases/download/0.0.1zoro/ron1n-linux-amd64' \
   'https://github.com/0xb0rn3/ron1n/releases/download/0.0.1zoro/ron1n-relay-windows-amd64.exe'; do
@@ -101,15 +111,17 @@ curl -fsSL 'https://raw.githubusercontent.com/0xb0rn3/ron1n/0.0.1zoro/install.sh
 
 Both commands must print exactly `0.0.1zoro`. Remove the isolated directory after reviewing its contents.
 
-Finally, run the tag-pinned installer and then the tag-pinned smoke suite in the Windows 10 QEMU/KVM guest:
+Finally, run the immutable commit-pinned installer and smoke suite in the Windows 10 QEMU/KVM guest:
 
 ```powershell
-irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1' | iex
+irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/acd7acb3f62ce099d1c792b993b8145de8240f0a/install.ps1' | iex
 irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d9be416c4c6d44e054ae60ac0f29ba688a412e17/scripts/windows-vm-smoke.ps1' | iex
 ```
 
 Record the checksum verification, version output, PATH behavior, content import, local host, relay delivery, explicit `ron1n relay revoke --session ID` result, and execution-policy result in `TESTING.md` and `BUILD_STATUS.md`.
 
-The first tag-pinned Windows bootstrap exposed a real compatibility defect during this gate: PowerShell 5.1 on the Windows 10 guest did not expose `RuntimeInformation.OSArchitecture`. The tag and release assets were left immutable. Commit `d4a8d5913768735ea75683876e78c4e62900d6ad` adds a legacy-safe `PROCESSOR_ARCHITECTURE`/`PROCESSOR_ARCHITEW6432` fallback, and the Windows commands above pin that exact reviewed commit.
+The first tag-pinned Windows bootstrap exposed a real compatibility defect during this gate: PowerShell 5.1 on the Windows 10 guest did not expose `RuntimeInformation.OSArchitecture`. The tag and release assets were left immutable. Commit `d4a8d5913768735ea75683876e78c4e62900d6ad` added the legacy-safe `PROCESSOR_ARCHITECTURE`/`PROCESSOR_ARCHITEW6432` fallback; the current command above pins the later reviewed `r2` commit containing that fix.
 
 The first full smoke run then exposed a harness-only null-log diagnostics bug after all local checks and outbound-agent startup had passed. Commit `d9be416c4c6d44e054ae60ac0f29ba688a412e17` makes empty redirected logs safe and is the immutable smoke-script reference above.
+
+The Windows service checks exposed two integration defects in sequence. Revision `0.0.1zoro-r1` fixes action quoting so `schtasks.exe` stores a valid executable and argument pair. Revision `0.0.1zoro-r2` ends a running task before deleting it so uninstall cannot leave the host process listening after autostart removal. The final Windows 10 QEMU/KVM acceptance passed install, health, restart, content update, uninstall, repeat uninstall, and execution-policy preservation against `r2`.

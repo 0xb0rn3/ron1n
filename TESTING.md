@@ -1,6 +1,6 @@
 # ron1n `0.0.1zoro` verification record
 
-Last updated: 2026-09-02
+Last updated: 2026-09-07
 
 ## Automated Go gates
 
@@ -23,7 +23,7 @@ The following binaries cross-compiled with `CGO_ENABLED=0`:
 
 ## Application release boundary
 
-The local build verified the 12 binary names, their exact `0.0.1zoro` version output, and the generated `SHA256SUMS`. It did not prove GitHub publication: the exact tag, release, and tagged raw installer URLs must exist before the copy-paste install paths can pass.
+The local build verified the 12 binary names, their exact `0.0.1zoro` version output, and the generated `SHA256SUMS`. GitHub publication is also verified: `0.0.1zoro`, `0.0.1zoro-r1`, and `0.0.1zoro-r2` are immutable public releases with 13 uploaded assets each. The follow-up tag names are distribution revisions; the binaries continue to print exactly `0.0.1zoro`.
 
 The Bash and PowerShell installers compare both downloaded binaries with `SHA256SUMS`, but all three are fetched from the same tagged GitHub trust domain. This is checksum verification, not an independent application signature. The Ed25519 content key signs imported content manifests only. Application self-update, independently signed application releases, and automatic application rollback are not implemented in `0.0.1zoro`.
 
@@ -54,20 +54,23 @@ Target: libvirt domain `win10`, Windows 10, amd64, SPICE/QXL, NAT address observ
 The guest has no QEMU Guest Agent; testing is driven through its SPICE console with screenshot evidence. Required post-push gates:
 
 ```powershell
-irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1' | iex
+irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/acd7acb3f62ce099d1c792b993b8145de8240f0a/install.ps1' | iex
 irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d9be416c4c6d44e054ae60ac0f29ba688a412e17/scripts/windows-vm-smoke.ps1' | iex
 ```
 
 - [x] Execute the original tag-pinned README `irm .../install.ps1 | iex` path from GitHub: failed before download because Windows PowerShell 5.1 lacks `RuntimeInformation.OSArchitecture`.
 - [x] Execute the exact commit-pinned compatibility installer from the current README; checksums verified and `ron1n version` returned `0.0.1zoro`. Fix commit: `d4a8d5913768735ea75683876e78c4e62900d6ad`.
 - [x] First full smoke attempt passed version, pinned import, NTFS signing, local health/MIME/hash/range, relay provisioning, and agent startup; its diagnostics helper then called `.Trim()` on an empty log. Harness-only fix: `d9be416c4c6d44e054ae60ac0f29ba688a412e17`.
-- [ ] Confirm release checksum verification and native `ron1n version` output.
-- [ ] Build/sign/verify the real pinned content manifest on NTFS.
-- [ ] Start the native Windows host and validate loopback health, cache MIME, full hash, and range.
-- [ ] Start native `ron1n-relay` plus outbound agent and complete a capability-URL fetch.
-- [ ] Record the printed session ID, run `ron1n relay revoke --session ID`, and confirm the old capability URL is rejected.
-- [ ] Confirm no permanent PowerShell execution-policy change.
-- [ ] Capture results and update this file after the run.
+- [x] The fixed full smoke completed: release checksum/version, pinned NTFS import/sign/verify, loopback health, cache MIME, full GoldHEN hash, 32-byte range, native relay, outbound agent, capability fetch with identical bytes, explicit session revocation to 404, and cleanup all passed.
+- [x] `0.0.1zoro-r1` verified corrected Scheduled Task XML quoting and background restart/update, then exposed that task deletion did not end the already-running host.
+- [x] Exact `0.0.1zoro-r2` installer from commit `acd7acb3f62ce099d1c792b993b8145de8240f0a` printed `Installed ron1n 0.0.1zoro from release 0.0.1zoro-r2` and `Release checksums verified`.
+- [x] Elevated `ron1n install --service` imported pinned commit `368d82aa40d3017c220757ce315761adb5f06678`, installed autostart, and exposed health `status=ok`, version `0.0.1zoro`, bundle `284fae686d9ce20c5b68095614586750c32d4c9453c53f18ea6abc67cb1ca726`.
+- [x] `ron1n restart` reported success and the same health/bundle identity returned after process replacement.
+- [x] `ron1n update` activated the same pinned upstream revision, restarted the host, and retained the verified bundle identity.
+- [x] `ron1n uninstall` ended the running task before deletion; host health became unreachable. A second uninstall also succeeded and preserved content, state, configuration, and signing keys.
+- [x] `Get-ExecutionPolicy -List` reported `Undefined` for MachinePolicy, UserPolicy, Process, CurrentUser, and LocalMachine after testing.
+
+Screenshot evidence from the final lifecycle run is retained locally as `/tmp/win10-r2-installer-8.ppm`, `/tmp/win10-r2-restart.ppm`, `/tmp/win10-before-uninstall.ppm`, `/tmp/win10-r2-uninstall.ppm`, `/tmp/win10-r2-uninstall-idempotent.ppm`, and `/tmp/win10-r2-policy.ppm`. These files contain no capability token or signing secret and are not release assets.
 
 ## Hardware-only gate
 

@@ -33,4 +33,14 @@ Post-tag bootstrap note: Windows 10 PowerShell 5.1 testing found that its .NET r
 
 Windows acceptance harness note: commit `d9be416c4c6d44e054ae60ac0f29ba688a412e17` safely handles empty redirected process logs discovered after the native content/local-host gates had passed.
 
+Windows distribution revision `0.0.1zoro-r1` fixes Scheduled Task action quoting without changing the executable product version. Revision `0.0.1zoro-r2` additionally ends the running task before deleting it during uninstall. Both revisions were published immutably with 12 binaries and `SHA256SUMS`; no earlier tag or asset was moved or replaced.
+
+The final Windows 10 QEMU/KVM run installed `r2` directly from commit-pinned GitHub bootstrap code, verified release checksums, exercised install/restart/content-update/uninstall, confirmed the live host became unreachable after uninstall, repeated uninstall successfully, and confirmed all permanent PowerShell execution-policy scopes remained undefined.
+
+### Operator UI handoff
+
+- Added a tokenized dark/light Control Deck design contract for the future loopback-only operator UI.
+- Assigned chinam0k a dependency-free, fixture-only prototype lane under `ui/prototype/**`.
+- Reserved Go API design, embedding, origin/authentication controls, security review, and final integration for lukk4n.
+
 PSFree, Lapse, AIO patches, GoldHEN, fonts, and other imported artifacts remain separately attributed upstream components. See `docs/UPSTREAM_AUDIT.md` and `docs/ECOSYSTEM_AUDIT.md`.

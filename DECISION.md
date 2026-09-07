@@ -83,11 +83,11 @@ Local LAN hosting remains available as an offline fallback and does not require 
 
 ## Release publication decision
 
-- Publish the exact `0.0.1zoro` tag from the clean, pushed release commit.
-- Build 12 native binaries from that clean tag and attach them with `SHA256SUMS` to the matching GitHub release.
-- Pin copy-paste bootstrap URLs to an immutable tag or reviewed full commit, never mutable `main`. Windows `0.0.1zoro` uses compatibility-fix commit `d4a8d5913768735ea75683876e78c4e62900d6ad` because the original tagged script referenced a .NET property absent from the Windows 10 PowerShell 5.1 guest; release binaries remain tag assets.
-- Never move a published tag or replace its assets; issue a new version instead.
-- Follow `docs/RELEASE.md` and complete the post-publication Linux URL and Windows VM checks before declaring the release validated.
+- The exact `0.0.1zoro` product release is published from its clean tag with 12 native binaries and `SHA256SUMS`.
+- Immutable Windows distribution revisions `0.0.1zoro-r1` and `0.0.1zoro-r2` preserve the executable product version while correcting Scheduled Task quoting and stop-before-delete uninstall behavior.
+- Pin copy-paste bootstrap URLs to an immutable tag or reviewed full commit, never mutable `main`. The current Windows installer is commit `acd7acb3f62ce099d1c792b993b8145de8240f0a` and downloads the `0.0.1zoro-r2` assets.
+- Never move a published tag or replace its assets; issue a new distribution revision or product version instead.
+- GitHub-first Windows validation is complete. The remaining release truth gap is hardware-only PS4 firmware-9.00 execution validation.
 
 ## Handoff rule
 

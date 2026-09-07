@@ -8,14 +8,14 @@ ron1n does not rewrite or claim authorship of PSFree, Lapse, the ROP/kernel patc
 
 ## Install with one command
 
-The copy-paste installers download both `ron1n` and `ron1n-relay` from the `0.0.1zoro` GitHub release, select the correct OS/architecture, fetch `SHA256SUMS`, and refuse installation if either binary does not match.
+The copy-paste installers download both `ron1n` and `ron1n-relay`, select the correct OS/architecture, fetch `SHA256SUMS`, and refuse installation if either binary does not match. The executable product version is `0.0.1zoro`. The current immutable Windows distribution revision is [`0.0.1zoro-r2`](https://github.com/0xb0rn3/ron1n/releases/tag/0.0.1zoro-r2); Linux and macOS continue to use the original [`0.0.1zoro`](https://github.com/0xb0rn3/ron1n/releases/tag/0.0.1zoro) assets because the follow-up fixes are Windows-specific.
 
 ### Windows — current user
 
 Open PowerShell and run:
 
 ```powershell
-irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1' | iex
+irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/acd7acb3f62ce099d1c792b993b8145de8240f0a/install.ps1' | iex
 ```
 
 This installs to `%LOCALAPPDATA%\ron1n\bin` and adds that directory to the current user's PATH. It does not require administrator rights and does not change the machine's PowerShell execution policy.
@@ -25,7 +25,7 @@ This installs to `%LOCALAPPDATA%\ron1n\bin` and adds that directory to the curre
 Run this from a normal PowerShell window. Windows will show its standard UAC prompt:
 
 ```powershell
-Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -Command "$env:RON1N_INSTALL_SCOPE=''Machine''; irm ''https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1'' | iex"'
+Start-Process powershell.exe -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -Command "$env:RON1N_INSTALL_SCOPE=''Machine''; irm ''https://raw.githubusercontent.com/0xb0rn3/ron1n/acd7acb3f62ce099d1c792b993b8145de8240f0a/install.ps1'' | iex"'
 ```
 
 This uses `-ExecutionPolicy Bypass` only for the new installer process; it does not weaken or overwrite the permanent user or machine policy. Machine scope installs to `%ProgramFiles%\ron1n` and updates the machine PATH.
@@ -62,7 +62,7 @@ Windows:
 
 ```powershell
 $installer = Join-Path $env:TEMP 'ron1n-install.ps1'
-irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/d4a8d5913768735ea75683876e78c4e62900d6ad/install.ps1' -OutFile $installer
+irm 'https://raw.githubusercontent.com/0xb0rn3/ron1n/acd7acb3f62ce099d1c792b993b8145de8240f0a/install.ps1' -OutFile $installer
 Get-Content $installer
 & $installer
 ```
@@ -75,7 +75,7 @@ less /tmp/ron1n-install.sh
 bash /tmp/ron1n-install.sh
 ```
 
-The Linux/macOS installer URL is pinned to the `0.0.1zoro` tag. The Windows installer is pinned to follow-up commit `d4a8d5913768735ea75683876e78c4e62900d6ad`, which replaces a .NET architecture API absent from the Windows 10 PowerShell 5.1 guest; the release binaries and their checksums remain the unchanged `0.0.1zoro` assets. The scripts, release binaries, and `SHA256SUMS` still share the GitHub repository trust domain: the checksum detects transfer or storage corruption, but it is not an independently signed release attestation. Inspect the tag/commit and compare the published checksums through an independent trusted channel when stronger authentication is required.
+The Linux/macOS installer URL is pinned to the `0.0.1zoro` tag. The Windows installer is pinned to follow-up commit `acd7acb3f62ce099d1c792b993b8145de8240f0a` and downloads the `0.0.1zoro-r2` assets. That revision contains the PowerShell 5.1 architecture fallback, correct Scheduled Task action quoting, and stop-before-delete uninstall behavior. The scripts, release binaries, and `SHA256SUMS` still share the GitHub repository trust domain: the checksum detects transfer or storage corruption, but it is not an independently signed release attestation. Inspect the tag/commit and compare the published checksums through an independent trusted channel when stronger authentication is required.
 
 The local Ed25519 key used for imported content does not sign ron1n application binaries. Release `0.0.1zoro` has no application self-updater, release-signing key, or automatic application rollback. Upgrade the application by reviewing and running the installer for a newer explicit release. Independently signed application releases and rollback-aware self-update remain future work.
 
@@ -95,6 +95,8 @@ ron1n install --service
 ```
 
 `--service` uses a systemd user unit on Linux, a native Scheduled Task on Windows, and a LaunchAgent on macOS. ron1n does not silently install packages, enable lingering, modify the firewall, or disable an older service.
+
+Windows Scheduled Task creation, restart, update of a running background host, and uninstall require an elevated PowerShell. The current-user binary installer itself remains non-administrative. Windows 10 QEMU/KVM acceptance verified install, restart, pinned-content update, stop-before-delete uninstall, repeat-uninstall idempotence, and unchanged permanent execution-policy scopes.
 
 The CLI prints the detected LAN URL. On the PS4:
 
@@ -314,7 +316,7 @@ Build all 12 release assets plus `SHA256SUMS`:
 make release VERSION=0.0.1zoro
 ```
 
-Release publication is a separate, manual gate. Commit and push the complete tree, create the exact `0.0.1zoro` tag on that clean commit, build from the clean tagged tree, verify `SHA256SUMS`, and attach the 12 binaries plus `SHA256SUMS` to the matching GitHub release. Do not move the tag or replace published assets; issue a new version instead. The exact commands and post-publication URL checks are in [the release runbook](docs/RELEASE.md).
+The original `0.0.1zoro` release and Windows follow-up revisions `0.0.1zoro-r1` and `0.0.1zoro-r2` are published with 12 binaries plus `SHA256SUMS` each. Published tags and assets remain immutable. The exact release history, validation evidence, and future publication commands are in [the release runbook](docs/RELEASE.md).
 
 The matrix is:
 
